@@ -21,3 +21,8 @@ struct Player {
    uint numberSelected;
 }
 mapping(address => Player) playerInfo;
+
+function Casino(uint _minimumBet){
+   owner = msg.sender;
+   if(_minimumBet != 0 ) minimumBet = _minimumBet;
+}
