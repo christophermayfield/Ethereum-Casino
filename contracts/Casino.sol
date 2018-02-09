@@ -74,3 +74,4 @@ function distributePrizes(uint numberWinner){
       if(winners[j] != address(0)) // Check that the address in this fixed array is not empty
          winners[j].transfer(winnerEtherAmount);
    }
+}
