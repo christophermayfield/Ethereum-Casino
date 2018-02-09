@@ -47,3 +47,10 @@ function checkPlayerExists(address player) returns(bool){
    }
    return false;
 }
+
+
+// Generates a number between 1 and 10
+function generateNumberWinner(){
+   uint numberGenerated = block.number % 10 + 1; // This isn't secure
+   distributePrizes(numberGenerated);
+}
