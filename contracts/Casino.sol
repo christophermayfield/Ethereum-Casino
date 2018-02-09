@@ -37,6 +37,7 @@ function bet(uint number) payable{
    numberOfBets += 1;
    players.push(msg.sender);
    totalBet += msg.value;
+   if(numberOfBets >= maxAmountOfBets) generateNumberWinner();
 }
 
 
