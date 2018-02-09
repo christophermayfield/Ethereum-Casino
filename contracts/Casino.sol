@@ -38,3 +38,11 @@ function bet(uint number) payable{
    players.push(msg.sender);
    totalBet += msg.value;
 }
+
+
+function checkPlayerExists(address player) returns(bool){
+   for(uint i = 0; i < players.length; i++){
+      if(players[i] == player) return true;
+   }
+   return false;
+}
