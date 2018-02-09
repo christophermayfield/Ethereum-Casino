@@ -10,3 +10,14 @@ contract Casino {
          selfdestruct(owner);
    }
 }
+
+uint minimumBet;
+uint totalBet;
+uint numberOfBets;
+uint maxAmountOfBets = 100;
+address[] players;
+struct Player {
+   uint amountBet;
+   uint numberSelected;
+}
+mapping(address => Player) playerInfo;
