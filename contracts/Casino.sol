@@ -139,3 +139,5 @@ contract Casino is usingOraclize {
       numberOfBets = 0;
    }
 }
+
+//some other BS stuff 
