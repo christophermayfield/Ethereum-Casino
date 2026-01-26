@@ -1,11 +1,42 @@
 pragma solidity ^0.4.11;
 
-import "github.com/oraclize/ethereum-api/oraclizeAPI.sol";
+import "github.com/oraclize/ethereum-api/oraclizeAPI_0.4.sol";
+
+library SafeMath {
+    function mul(uint256 a, uint256 b) internal pure returns (uint256) {
+        if (a == 0) {
+            return 0;
+        }
+        uint256 c = a * b;
+        assert(c / a == b);
+        return c;
+    }
+
+    function div(uint256 a, uint256 b) internal pure returns (uint256) {
+        // assert(b > 0); // Solidity automatically throws when dividing by 0
+        uint256 c = a / b;
+        // assert(a == b * c + a % b); // There is no case in which this doesn't hold
+        return c;
+    }
+
+    function sub(uint256 a, uint256 b) internal pure returns (uint256) {
+        assert(b <= a);
+        return a - b;
+    }
+
+    function add(uint256 a, uint256 b) internal pure returns (uint256) {
+        uint256 c = a + b;
+        assert(c >= a);
+        return c;
+    }
+}
 
 /// @title Contract to bet Ether for a number and win randomly when the number of bets is met.
 /// @author Merunas Grincalaitis
 contract Casino is usingOraclize {
-   address owner;
+   using SafeMath for uint256;
+
+   address public owner;
 
    // The minimum bet a user has to make to participate in the game
    uint public minimumBet = 100 finney; // Equal to 0.1 ether
@@ -15,6 +46,9 @@ contract Casino is usingOraclize {
 
    // The total number of bets the users have made
    uint public numberOfBets;
+
+   // The current game ID
+   uint public gameId;
 
    // The maximum amount of bets can be made for each game
    uint public maxAmountOfBets = 10;
@@ -30,10 +64,21 @@ contract Casino is usingOraclize {
    address[] public players;
 
    // Each number has an array of players. Associate each number with a bunch of players
-   mapping(uint => address[]) numberBetPlayers;
+   mapping(uint => address[]) public numberBetPlayers;
 
    // The number that each player has bet for
-   mapping(address => uint) playerBetsNumber;
+   mapping(address => uint) public playerBetsNumber;
+
+   // The game ID each player last played in
+   mapping(address => uint) public playerGameId;
+
+   // Winnings map for withdrawal pattern
+   mapping(address => uint256) public winnings;
+
+   // Events
+   event LogBet(address indexed sender, uint256 amount, uint indexed number);
+   event LogWinner(uint indexed winnerNumber, uint256 totalPot);
+   event LogWithdrawal(address indexed receiver, uint256 amount);
 
    // Modifier to only allow the execution of functions when the bets are completed
    modifier onEndGame(){
@@ -43,8 +88,9 @@ contract Casino is usingOraclize {
    /// @notice Constructor that's used to configure the minimum bet per game and the max amount of bets
    /// @param _minimumBet The minimum bet that each user has to make in order to participate in the game
    /// @param _maxAmountOfBets The max amount of bets that are required for each game
-   function Casino(uint _minimumBet, uint _maxAmountOfBets){
+   function Casino(uint _minimumBet, uint _maxAmountOfBets) public {
       owner = msg.sender;
+      gameId = 1;
 
       if(_minimumBet > 0) minimumBet = _minimumBet;
       if(_maxAmountOfBets > 0 && _maxAmountOfBets <= LIMIT_AMOUNT_BETS)
@@ -57,16 +103,13 @@ contract Casino is usingOraclize {
    /// @notice Check if a player exists in the current game
    /// @param player The address of the player to check
    /// @return bool Returns true is it exists or false if it doesn't
-   function checkPlayerExists(address player) returns(bool){
-      if(playerBetsNumber[player] > 0)
-         return true;
-      else
-         return false;
+   function checkPlayerExists(address player) public view returns(bool){
+      return (playerGameId[player] == gameId);
    }
 
    /// @notice To bet for a number by sending Ether
    /// @param numberToBet The number that the player wants to bet for. Must be between 1 and 10 both inclusive
-   function bet(uint numberToBet) payable{
+   function bet(uint numberToBet) public payable{
 
       // Check that the max amount of bets hasn't been met yet
       assert(numberOfBets < maxAmountOfBets);
@@ -82,12 +125,15 @@ contract Casino is usingOraclize {
 
       // Set the number bet for that player
       playerBetsNumber[msg.sender] = numberToBet;
+      playerGameId[msg.sender] = gameId;
 
       // The player msg.sender has bet for that number
       numberBetPlayers[numberToBet].push(msg.sender);
 
-      numberOfBets += 1;
-      totalBet += msg.value;
+      numberOfBets = numberOfBets.add(1);
+      totalBet = totalBet.add(msg.value);
+
+      LogBet(msg.sender, msg.value, numberToBet);
 
       if(numberOfBets >= maxAmountOfBets) generateNumberWinner();
    }
@@ -95,7 +141,7 @@ contract Casino is usingOraclize {
    /// @notice Generates a random number between 1 and 10 both inclusive.
    /// Must be payable because oraclize needs gas to generate a random number.
    /// Can only be executed when the game ends.
-   function generateNumberWinner() payable onEndGame {
+   function generateNumberWinner() internal onEndGame {
       uint numberRandomBytes = 7;
       uint delay = 0;
       uint callbackGas = 200000;
@@ -111,7 +157,7 @@ contract Casino is usingOraclize {
       bytes32 _queryId,
       string _result,
       bytes _proof
-   ) oraclize_randomDS_proofVerify(_queryId, _result, _proof) onEndGame {
+   ) public oraclize_randomDS_proofVerify(_queryId, _result, _proof) onEndGame {
 
       // Checks that the sender of this callback was in fact oraclize
       assert(msg.sender == oraclize_cbAddress());
@@ -122,22 +168,37 @@ contract Casino is usingOraclize {
 
    /// @notice Sends the corresponding Ether to each winner then deletes all the
    /// players for the next game and resets the `totalBet` and `numberOfBets`
-   function distributePrizes() onEndGame {
-      uint winnerEtherAmount = totalBet / numberBetPlayers[numberWinner].length; // How much each winner gets
+   function distributePrizes() internal {
+      uint winnerCount = numberBetPlayers[numberWinner].length;
 
-      // Loop through all the winners to send the corresponding prize for each one
-      for(uint i = 0; i < numberBetPlayers[numberWinner].length; i++){
-         numberBetPlayers[numberWinner][i].transfer(winnerEtherAmount);
+      if (winnerCount > 0) {
+        uint winnerEtherAmount = totalBet.div(winnerCount);
+        LogWinner(numberWinner, totalBet);
+
+        // Loop through all the winners to send the corresponding prize for each one
+        for(uint i = 0; i < winnerCount; i++){
+           winnings[numberBetPlayers[numberWinner][i]] = winnings[numberBetPlayers[numberWinner][i]].add(winnerEtherAmount);
+        }
+      } else {
+         LogWinner(numberWinner, 0);
+         // If no winners, owner takes the pot to avoid funds getting stuck
+         winnings[owner] = winnings[owner].add(totalBet);
       }
 
-      // Delete all the players for each number
+      // Delete all the players for each number and reset bet tracking
       for(uint j = 1; j <= 10; j++){
          numberBetPlayers[j].length = 0;
       }
 
       totalBet = 0;
       numberOfBets = 0;
+      gameId = gameId.add(1);
+   }
+
+   function withdraw(uint256 amount) public {
+       require(winnings[msg.sender] >= amount);
+       winnings[msg.sender] = winnings[msg.sender].sub(amount);
+       msg.sender.transfer(amount);
+       LogWithdrawal(msg.sender, amount);
    }
 }
-
-//some other BS stuff 
