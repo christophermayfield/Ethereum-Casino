@@ -1,0 +1,619 @@
+{
+  "contractName": "usingOraclize",
+  "abi": [],
+  "bytecode": "0x60606040523415600e57600080fd5b603580601b6000396000f3006060604052600080fd00a165627a7a72305820f67f2435b4b9e11f56dbd4bcaa91be14ab96c51cf7d0ae0c51598d7e7c4cbe4f0029",
+  "deployedBytecode": "0x6060604052600080fd00a165627a7a72305820f67f2435b4b9e11f56dbd4bcaa91be14ab96c51cf7d0ae0c51598d7e7c4cbe4f0029",
+  "sourceMap": "26:585:1:-;;;;;;;;;;;;;;;;;",
+  "deployedSourceMap": "26:585:1:-;;;;;",
+  "source": "pragma solidity ^0.4.11;\n\ncontract usingOraclize {\n    byte constant proofType_Ledger = 0x30;\n\n    function oraclize_setProof(byte _proofP) internal {}\n\n    function oraclize_newRandomDSQuery(uint _delay, uint _nbytes, uint _customGasLimit) internal returns (bytes32 _queryId) {\n        return bytes32(0);\n    }\n\n    function oraclize_cbAddress() internal returns (address _callbackAddress) {\n        // Return msg.sender to allow the test runner to call __callback\n        return msg.sender;\n    }\n\n    modifier oraclize_randomDS_proofVerify(bytes32 _queryId, string _result, bytes _proof) {\n        _;\n    }\n}\n",
+  "sourcePath": "/app/contracts/oraclizeAPI.sol",
+  "ast": {
+    "attributes": {
+      "absolutePath": "/app/contracts/oraclizeAPI.sol",
+      "exportedSymbols": {
+        "usingOraclize": [
+          587
+        ]
+      }
+    },
+    "children": [
+      {
+        "attributes": {
+          "literals": [
+            "solidity",
+            "^",
+            "0.4",
+            ".11"
+          ]
+        },
+        "id": 542,
+        "name": "PragmaDirective",
+        "src": "0:24:1"
+      },
+      {
+        "attributes": {
+          "baseContracts": [
+            null
+          ],
+          "contractDependencies": [
+            null
+          ],
+          "contractKind": "contract",
+          "documentation": null,
+          "fullyImplemented": true,
+          "linearizedBaseContracts": [
+            587
+          ],
+          "name": "usingOraclize",
+          "scope": 588
+        },
+        "children": [
+          {
+            "attributes": {
+              "constant": true,
+              "name": "proofType_Ledger",
+              "scope": 587,
+              "stateVariable": true,
+              "storageLocation": "default",
+              "type": "bytes1",
+              "visibility": "internal"
+            },
+            "children": [
+              {
+                "attributes": {
+                  "name": "byte",
+                  "type": "bytes1"
+                },
+                "id": 543,
+                "name": "ElementaryTypeName",
+                "src": "55:4:1"
+              },
+              {
+                "attributes": {
+                  "argumentTypes": null,
+                  "hexvalue": "30783330",
+                  "isConstant": false,
+                  "isLValue": false,
+                  "isPure": true,
+                  "lValueRequested": false,
+                  "subdenomination": null,
+                  "token": "number",
+                  "type": "int_const 48",
+                  "value": "0x30"
+                },
+                "id": 544,
+                "name": "Literal",
+                "src": "88:4:1"
+              }
+            ],
+            "id": 545,
+            "name": "VariableDeclaration",
+            "src": "55:37:1"
+          },
+          {
+            "attributes": {
+              "constant": false,
+              "implemented": true,
+              "isConstructor": false,
+              "modifiers": [
+                null
+              ],
+              "name": "oraclize_setProof",
+              "payable": false,
+              "scope": 587,
+              "stateMutability": "nonpayable",
+              "superFunction": null,
+              "visibility": "internal"
+            },
+            "children": [
+              {
+                "children": [
+                  {
+                    "attributes": {
+                      "constant": false,
+                      "name": "_proofP",
+                      "scope": 551,
+                      "stateVariable": false,
+                      "storageLocation": "default",
+                      "type": "bytes1",
+                      "value": null,
+                      "visibility": "internal"
+                    },
+                    "children": [
+                      {
+                        "attributes": {
+                          "name": "byte",
+                          "type": "bytes1"
+                        },
+                        "id": 546,
+                        "name": "ElementaryTypeName",
+                        "src": "126:4:1"
+                      }
+                    ],
+                    "id": 547,
+                    "name": "VariableDeclaration",
+                    "src": "126:12:1"
+                  }
+                ],
+                "id": 548,
+                "name": "ParameterList",
+                "src": "125:14:1"
+              },
+              {
+                "attributes": {
+                  "parameters": [
+                    null
+                  ]
+                },
+                "children": [],
+                "id": 549,
+                "name": "ParameterList",
+                "src": "149:0:1"
+              },
+              {
+                "attributes": {
+                  "statements": [
+                    null
+                  ]
+                },
+                "children": [],
+                "id": 550,
+                "name": "Block",
+                "src": "149:2:1"
+              }
+            ],
+            "id": 551,
+            "name": "FunctionDefinition",
+            "src": "99:52:1"
+          },
+          {
+            "attributes": {
+              "constant": false,
+              "implemented": true,
+              "isConstructor": false,
+              "modifiers": [
+                null
+              ],
+              "name": "oraclize_newRandomDSQuery",
+              "payable": false,
+              "scope": 587,
+              "stateMutability": "nonpayable",
+              "superFunction": null,
+              "visibility": "internal"
+            },
+            "children": [
+              {
+                "children": [
+                  {
+                    "attributes": {
+                      "constant": false,
+                      "name": "_delay",
+                      "scope": 567,
+                      "stateVariable": false,
+                      "storageLocation": "default",
+                      "type": "uint256",
+                      "value": null,
+                      "visibility": "internal"
+                    },
+                    "children": [
+                      {
+                        "attributes": {
+                          "name": "uint",
+                          "type": "uint256"
+                        },
+                        "id": 552,
+                        "name": "ElementaryTypeName",
+                        "src": "192:4:1"
+                      }
+                    ],
+                    "id": 553,
+                    "name": "VariableDeclaration",
+                    "src": "192:11:1"
+                  },
+                  {
+                    "attributes": {
+                      "constant": false,
+                      "name": "_nbytes",
+                      "scope": 567,
+                      "stateVariable": false,
+                      "storageLocation": "default",
+                      "type": "uint256",
+                      "value": null,
+                      "visibility": "internal"
+                    },
+                    "children": [
+                      {
+                        "attributes": {
+                          "name": "uint",
+                          "type": "uint256"
+                        },
+                        "id": 554,
+                        "name": "ElementaryTypeName",
+                        "src": "205:4:1"
+                      }
+                    ],
+                    "id": 555,
+                    "name": "VariableDeclaration",
+                    "src": "205:12:1"
+                  },
+                  {
+                    "attributes": {
+                      "constant": false,
+                      "name": "_customGasLimit",
+                      "scope": 567,
+                      "stateVariable": false,
+                      "storageLocation": "default",
+                      "type": "uint256",
+                      "value": null,
+                      "visibility": "internal"
+                    },
+                    "children": [
+                      {
+                        "attributes": {
+                          "name": "uint",
+                          "type": "uint256"
+                        },
+                        "id": 556,
+                        "name": "ElementaryTypeName",
+                        "src": "219:4:1"
+                      }
+                    ],
+                    "id": 557,
+                    "name": "VariableDeclaration",
+                    "src": "219:20:1"
+                  }
+                ],
+                "id": 558,
+                "name": "ParameterList",
+                "src": "191:49:1"
+              },
+              {
+                "children": [
+                  {
+                    "attributes": {
+                      "constant": false,
+                      "name": "_queryId",
+                      "scope": 567,
+                      "stateVariable": false,
+                      "storageLocation": "default",
+                      "type": "bytes32",
+                      "value": null,
+                      "visibility": "internal"
+                    },
+                    "children": [
+                      {
+                        "attributes": {
+                          "name": "bytes32",
+                          "type": "bytes32"
+                        },
+                        "id": 559,
+                        "name": "ElementaryTypeName",
+                        "src": "259:7:1"
+                      }
+                    ],
+                    "id": 560,
+                    "name": "VariableDeclaration",
+                    "src": "259:16:1"
+                  }
+                ],
+                "id": 561,
+                "name": "ParameterList",
+                "src": "258:18:1"
+              },
+              {
+                "children": [
+                  {
+                    "attributes": {
+                      "functionReturnParameters": 561
+                    },
+                    "children": [
+                      {
+                        "attributes": {
+                          "argumentTypes": null,
+                          "isConstant": false,
+                          "isLValue": false,
+                          "isPure": true,
+                          "isStructConstructorCall": false,
+                          "lValueRequested": false,
+                          "names": [
+                            null
+                          ],
+                          "type": "bytes32",
+                          "type_conversion": true
+                        },
+                        "children": [
+                          {
+                            "attributes": {
+                              "argumentTypes": [
+                                {
+                                  "typeIdentifier": "t_rational_0_by_1",
+                                  "typeString": "int_const 0"
+                                }
+                              ],
+                              "isConstant": false,
+                              "isLValue": false,
+                              "isPure": true,
+                              "lValueRequested": false,
+                              "type": "type(bytes32)",
+                              "value": "bytes32"
+                            },
+                            "id": 562,
+                            "name": "ElementaryTypeNameExpression",
+                            "src": "294:7:1"
+                          },
+                          {
+                            "attributes": {
+                              "argumentTypes": null,
+                              "hexvalue": "30",
+                              "isConstant": false,
+                              "isLValue": false,
+                              "isPure": true,
+                              "lValueRequested": false,
+                              "subdenomination": null,
+                              "token": "number",
+                              "type": "int_const 0",
+                              "value": "0"
+                            },
+                            "id": 563,
+                            "name": "Literal",
+                            "src": "302:1:1"
+                          }
+                        ],
+                        "id": 564,
+                        "name": "FunctionCall",
+                        "src": "294:10:1"
+                      }
+                    ],
+                    "id": 565,
+                    "name": "Return",
+                    "src": "287:17:1"
+                  }
+                ],
+                "id": 566,
+                "name": "Block",
+                "src": "277:34:1"
+              }
+            ],
+            "id": 567,
+            "name": "FunctionDefinition",
+            "src": "157:154:1"
+          },
+          {
+            "attributes": {
+              "constant": false,
+              "implemented": true,
+              "isConstructor": false,
+              "modifiers": [
+                null
+              ],
+              "name": "oraclize_cbAddress",
+              "payable": false,
+              "scope": 587,
+              "stateMutability": "nonpayable",
+              "superFunction": null,
+              "visibility": "internal"
+            },
+            "children": [
+              {
+                "attributes": {
+                  "parameters": [
+                    null
+                  ]
+                },
+                "children": [],
+                "id": 568,
+                "name": "ParameterList",
+                "src": "344:2:1"
+              },
+              {
+                "children": [
+                  {
+                    "attributes": {
+                      "constant": false,
+                      "name": "_callbackAddress",
+                      "scope": 576,
+                      "stateVariable": false,
+                      "storageLocation": "default",
+                      "type": "address",
+                      "value": null,
+                      "visibility": "internal"
+                    },
+                    "children": [
+                      {
+                        "attributes": {
+                          "name": "address",
+                          "type": "address"
+                        },
+                        "id": 569,
+                        "name": "ElementaryTypeName",
+                        "src": "365:7:1"
+                      }
+                    ],
+                    "id": 570,
+                    "name": "VariableDeclaration",
+                    "src": "365:24:1"
+                  }
+                ],
+                "id": 571,
+                "name": "ParameterList",
+                "src": "364:26:1"
+              },
+              {
+                "children": [
+                  {
+                    "attributes": {
+                      "functionReturnParameters": 571
+                    },
+                    "children": [
+                      {
+                        "attributes": {
+                          "argumentTypes": null,
+                          "isConstant": false,
+                          "isLValue": false,
+                          "isPure": false,
+                          "lValueRequested": false,
+                          "member_name": "sender",
+                          "referencedDeclaration": null,
+                          "type": "address"
+                        },
+                        "children": [
+                          {
+                            "attributes": {
+                              "argumentTypes": null,
+                              "overloadedDeclarations": [
+                                null
+                              ],
+                              "referencedDeclaration": 599,
+                              "type": "msg",
+                              "value": "msg"
+                            },
+                            "id": 572,
+                            "name": "Identifier",
+                            "src": "481:3:1"
+                          }
+                        ],
+                        "id": 573,
+                        "name": "MemberAccess",
+                        "src": "481:10:1"
+                      }
+                    ],
+                    "id": 574,
+                    "name": "Return",
+                    "src": "474:17:1"
+                  }
+                ],
+                "id": 575,
+                "name": "Block",
+                "src": "391:107:1"
+              }
+            ],
+            "id": 576,
+            "name": "FunctionDefinition",
+            "src": "317:181:1"
+          },
+          {
+            "attributes": {
+              "name": "oraclize_randomDS_proofVerify",
+              "visibility": "internal"
+            },
+            "children": [
+              {
+                "children": [
+                  {
+                    "attributes": {
+                      "constant": false,
+                      "name": "_queryId",
+                      "scope": 586,
+                      "stateVariable": false,
+                      "storageLocation": "default",
+                      "type": "bytes32",
+                      "value": null,
+                      "visibility": "internal"
+                    },
+                    "children": [
+                      {
+                        "attributes": {
+                          "name": "bytes32",
+                          "type": "bytes32"
+                        },
+                        "id": 577,
+                        "name": "ElementaryTypeName",
+                        "src": "543:7:1"
+                      }
+                    ],
+                    "id": 578,
+                    "name": "VariableDeclaration",
+                    "src": "543:16:1"
+                  },
+                  {
+                    "attributes": {
+                      "constant": false,
+                      "name": "_result",
+                      "scope": 586,
+                      "stateVariable": false,
+                      "storageLocation": "default",
+                      "type": "string memory",
+                      "value": null,
+                      "visibility": "internal"
+                    },
+                    "children": [
+                      {
+                        "attributes": {
+                          "name": "string",
+                          "type": "string storage pointer"
+                        },
+                        "id": 579,
+                        "name": "ElementaryTypeName",
+                        "src": "561:6:1"
+                      }
+                    ],
+                    "id": 580,
+                    "name": "VariableDeclaration",
+                    "src": "561:14:1"
+                  },
+                  {
+                    "attributes": {
+                      "constant": false,
+                      "name": "_proof",
+                      "scope": 586,
+                      "stateVariable": false,
+                      "storageLocation": "default",
+                      "type": "bytes memory",
+                      "value": null,
+                      "visibility": "internal"
+                    },
+                    "children": [
+                      {
+                        "attributes": {
+                          "name": "bytes",
+                          "type": "bytes storage pointer"
+                        },
+                        "id": 581,
+                        "name": "ElementaryTypeName",
+                        "src": "577:5:1"
+                      }
+                    ],
+                    "id": 582,
+                    "name": "VariableDeclaration",
+                    "src": "577:12:1"
+                  }
+                ],
+                "id": 583,
+                "name": "ParameterList",
+                "src": "542:48:1"
+              },
+              {
+                "children": [
+                  {
+                    "id": 584,
+                    "name": "PlaceholderStatement",
+                    "src": "601:1:1"
+                  }
+                ],
+                "id": 585,
+                "name": "Block",
+                "src": "591:18:1"
+              }
+            ],
+            "id": 586,
+            "name": "ModifierDefinition",
+            "src": "504:105:1"
+          }
+        ],
+        "id": 587,
+        "name": "ContractDefinition",
+        "src": "26:585:1"
+      }
+    ],
+    "id": 588,
+    "name": "SourceUnit",
+    "src": "0:612:1"
+  },
+  "compiler": {
+    "name": "solc",
+    "version": "0.4.19+commit.c4cbbb05.Emscripten.clang"
+  },
+  "networks": {},
+  "schemaVersion": "1.0.1",
+  "updatedAt": "2026-01-26T20:38:59.860Z"
+}
