@@ -141,6 +141,9 @@ contract Casino is usingOraclize {
       uint delay = 0;
       uint callbackGas = 200000;
 
+      uint256 queryPrice = oraclize_getPrice("random", callbackGas);
+      totalBet = totalBet.sub(queryPrice);
+
       bytes32 queryId = oraclize_newRandomDSQuery(delay, numberRandomBytes, callbackGas);
    }
 
