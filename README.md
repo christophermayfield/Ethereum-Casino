@@ -20,6 +20,12 @@ The core logic is implemented in the `Casino.sol` smart contract.
 *   **Randomness**: Uses [Oraclize (now Provable)](http://www.oraclize.it/) to generate a secure random number on-chain.
 *   **Security**: Uses `SafeMath` for arithmetic operations to prevent overflows/underflows. Uses a withdrawal pattern (`withdraw()` function) to prevent reentrancy attacks and gas limit issues during prize distribution.
 
+## Security Note
+
+**WARNING**: This repository uses a **mock implementation** of the Oraclize API (`contracts/oraclizeAPI_0.4.sol`) for local development and testing purposes.
+*   The mock allows any caller to simulate the oracle callback.
+*   **DO NOT DEPLOY THIS CODE TO MAINNET** without replacing the local import in `Casino.sol` with the official Oraclize/Provable import or a secure bridge.
+
 ## How It Works
 
 1.  **Initialization**: The contract is deployed with a minimum bet amount and a maximum number of bets per game.
@@ -45,6 +51,7 @@ The core logic is implemented in the `Casino.sol` smart contract.
 *   Node.js and npm
 *   Truffle (`npm install -g truffle`)
 *   Ganache or a local Ethereum node for development
+*   MetaMask browser extension
 
 ## Installation
 
@@ -57,35 +64,48 @@ The core logic is implemented in the `Casino.sol` smart contract.
     ```bash
     truffle compile
     ```
-    *Note: The contract imports Oraclize API via GitHub. Ensure your environment supports this or manually download `oraclizeAPI_0.4.sol` if compilation fails.*
+    *Note: The contract imports `oraclizeAPI_0.4.sol` locally.*
 
 3.  Migrate (Deploy) contracts:
     ```bash
     truffle migrate
     ```
 
+## Frontend Usage
+
+1.  Build the frontend application:
+    ```bash
+    npm run build
+    ```
+
+2.  Open the application:
+    *   Open `dist/index.html` in your web browser.
+    *   Ensure MetaMask is installed and connected to your local Ethereum network (e.g., Localhost 8545).
+    *   If using Ganache, import a Ganache account into MetaMask using the private key.
+
+3.  Play:
+    *   The dashboard shows the current game status (Minimum bet, Total bet, etc.).
+    *   Click on a number to place a bet. MetaMask will prompt you to confirm the transaction.
+    *   Once the max bets limit is reached, the winner will be determined (requires Oraclize bridge or manual oracle response in dev).
+
 ## Project Structure
 
 *   `contracts/`: Solidity smart contracts.
 *   `migrations/`: Truffle deployment scripts.
-*   `src/`: Frontend source files.
-*   `test/`: Smart contract tests (currently empty).
+*   `src/js/`: React frontend source files (`index.js`, `App.js`).
+*   `src/css/`: Stylesheets.
+*   `test/`: Smart contract tests.
+*   `dist/`: Compiled frontend assets (`index.html`, `build.js`).
 
 ## Troubleshooting
 
 ### Oraclize Import Error
-If you encounter `Error: Could not find github.com/oraclize/ethereum-api/oraclizeAPI_0.4.sol`, it means Truffle cannot resolve the external GitHub import.
-**Solution**:
-1.  Download the `oraclizeAPI_0.4.sol` file manually from the [Oraclize GitHub repository](https://github.com/provable-things/ethereum-api).
-2.  Place it in the `contracts/` directory.
-3.  Update `Casino.sol` to import from the local file: `import "./oraclizeAPI_0.4.sol";`.
+The project uses a local copy of `oraclizeAPI_0.4.sol` in `contracts/` to ensure compilation succeeds even if the external GitHub import fails.
 
-## Disclaimer
-
-**Missing Frontend Source**: The `webpack.config.js` references an entry point at `src/js/index.js`, but the `src/js` directory is currently missing from this repository. As such, the frontend build process (`npm start` or `webpack`) will fail until the missing source code is restored or recreated.
+### Web3 Connection
+Ensure your browser has MetaMask installed or you are running a local node on port 8545. The app attempts to connect to an injected Web3 provider (MetaMask) first, then falls back to `http://localhost:8545`.
 
 ## Future Improvements
 
-*   **Reconstruct Frontend**: Create the missing React components (`src/js/index.js`, `App.js`) to interact with the contract.
 *   **Unit Tests**: Add comprehensive tests in `test/` to verify betting logic, edge cases, and payout calculations.
 *   **Oraclize Bridge**: Set up the Ethereum Bridge for local development to simulate Oraclize responses.

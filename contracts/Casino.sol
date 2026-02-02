@@ -1,6 +1,7 @@
 pragma solidity ^0.4.11;
 
-import "github.com/oraclize/ethereum-api/oraclizeAPI_0.4.sol";
+// WARNING: Using local mock for development. Replace with GitHub import for production.
+import "./oraclizeAPI_0.4.sol";
 
 library SafeMath {
     function mul(uint256 a, uint256 b) internal pure returns (uint256) {
