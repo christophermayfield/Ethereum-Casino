@@ -202,4 +202,20 @@ contract Casino is usingOraclize {
        msg.sender.transfer(amount);
        LogWithdrawal(msg.sender, amount);
    }
+
+   function setMinimumBet(uint _newMinimumBet) public {
+       require(msg.sender == owner);
+       minimumBet = _newMinimumBet;
+   }
+
+   function setMaxAmountOfBets(uint _newMaxAmountOfBets) public {
+       require(msg.sender == owner);
+       require(_newMaxAmountOfBets > 0 && _newMaxAmountOfBets <= LIMIT_AMOUNT_BETS);
+       maxAmountOfBets = _newMaxAmountOfBets;
+   }
+
+   function kill() public {
+       require(msg.sender == owner);
+       selfdestruct(owner);
+   }
 }

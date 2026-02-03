@@ -15,7 +15,11 @@ class App extends React.Component {
          maxAmountOfBets: 0,
          web3: null,
          contractInstance: null,
-         account: null
+         account: null,
+         myWinnings: 0,
+         owner: null,
+         newMinimumBet: 0,
+         newMaxAmountOfBets: 0
       }
 
       if (typeof web3 != 'undefined') {
@@ -65,6 +69,9 @@ class App extends React.Component {
                this.updateState()
            }
        })
+       instance.LogWithdrawal({}, { fromBlock: 0, toBlock: 'latest' }).watch((error, event) => {
+           if (!error) this.updateState()
+       })
    }
 
    updateState() {
@@ -82,6 +89,12 @@ class App extends React.Component {
            instance.maxAmountOfBets((err, result) => {
                if(!err) this.setState({ maxAmountOfBets: result.toNumber() })
            })
+           instance.winnings(this.state.account, (err, result) => {
+               if(!err) this.setState({ myWinnings: parseFloat(this.web3.fromWei(result, 'ether')) })
+           })
+           instance.owner((err, result) => {
+               if(!err) this.setState({ owner: result })
+           })
        }
    }
 
@@ -94,6 +107,57 @@ class App extends React.Component {
            }, (err, result) => {
                if (err) console.error(err)
                else console.log("Bet placed:", result)
+           })
+       }
+   }
+
+   withdraw() {
+       if (this.state.contractInstance) {
+           // Withdraw all winnings
+           const amount = this.web3.toWei(this.state.myWinnings, 'ether');
+           this.state.contractInstance.withdraw(amount, {
+               from: this.state.account,
+               gas: 300000
+           }, (err, result) => {
+               if (err) console.error(err)
+               else console.log("Withdrawal initiated:", result)
+           })
+       }
+   }
+
+   updateMinimumBet() {
+       if (this.state.contractInstance) {
+           const amount = this.web3.toWei(this.state.newMinimumBet, 'ether');
+           this.state.contractInstance.setMinimumBet(amount, {
+               from: this.state.account,
+               gas: 300000
+           }, (err, result) => {
+               if(err) console.error(err);
+               else console.log("Minimum bet updated:", result);
+           })
+       }
+   }
+
+   updateMaxBets() {
+       if (this.state.contractInstance) {
+           this.state.contractInstance.setMaxAmountOfBets(this.state.newMaxAmountOfBets, {
+               from: this.state.account,
+               gas: 300000
+           }, (err, result) => {
+               if(err) console.error(err);
+               else console.log("Max bets updated:", result);
+           })
+       }
+   }
+
+   kill() {
+       if (this.state.contractInstance) {
+           this.state.contractInstance.kill({
+               from: this.state.account,
+               gas: 300000
+           }, (err, result) => {
+               if(err) console.error(err);
+               else console.log("Contract killed:", result);
            })
        }
    }
@@ -118,6 +182,30 @@ class App extends React.Component {
                <p>Total ether bet: {this.state.totalBet} ETH</p>
                <p>Minimum bet: {this.state.minimumBet} ETH</p>
                <p><i>Your Account: {this.state.account}</i></p>
+
+               <hr/>
+               <h3>Your Winnings</h3>
+               <p>Available: {this.state.myWinnings} ETH</p>
+               <button onClick={() => this.withdraw()} disabled={this.state.myWinnings <= 0}>Withdraw Winnings</button>
+
+               {this.state.account === this.state.owner && (
+                   <div style={{marginTop: '20px', padding: '10px', border: '1px solid red'}}>
+                       <h3>Owner Panel</h3>
+                       <div>
+                           <label>New Minimum Bet (ETH): </label>
+                           <input type="number" onChange={(e) => this.setState({newMinimumBet: e.target.value})} />
+                           <button onClick={() => this.updateMinimumBet()}>Update</button>
+                       </div>
+                       <div style={{marginTop: '10px'}}>
+                           <label>New Max Bets: </label>
+                           <input type="number" onChange={(e) => this.setState({newMaxAmountOfBets: e.target.value})} />
+                           <button onClick={() => this.updateMaxBets()}>Update</button>
+                       </div>
+                       <div style={{marginTop: '10px'}}>
+                           <button onClick={() => this.kill()} style={{backgroundColor: 'red', color: 'white'}}>Kill Contract</button>
+                       </div>
+                   </div>
+               )}
             </div>
          </div>
       )
