@@ -1,6 +1,7 @@
 pragma solidity ^0.4.11;
 
-import "github.com/oraclize/ethereum-api/oraclizeAPI_0.4.sol";
+// WARNING: Using local mock for development. Replace with GitHub import for production.
+import "./oraclizeAPI_0.4.sol";
 
 library SafeMath {
     function mul(uint256 a, uint256 b) internal pure returns (uint256) {
@@ -69,6 +70,9 @@ contract Casino is usingOraclize {
    // Winnings map for withdrawal pattern
    mapping(address => uint256) public winnings;
 
+   // Total amount wagered by each player
+   mapping(address => uint256) public playerTotalBets;
+
    // Events
    event LogBet(address sender, uint256 amount, uint number);
    event LogWinner(uint winnerNumber, uint256 totalPot);
@@ -127,6 +131,7 @@ contract Casino is usingOraclize {
 
       numberOfBets = numberOfBets.add(1);
       totalBet = totalBet.add(msg.value);
+      playerTotalBets[msg.sender] = playerTotalBets[msg.sender].add(msg.value);
 
       LogBet(msg.sender, msg.value, numberToBet);
 
@@ -200,5 +205,21 @@ contract Casino is usingOraclize {
        winnings[msg.sender] = winnings[msg.sender].sub(amount);
        msg.sender.transfer(amount);
        LogWithdrawal(msg.sender, amount);
+   }
+
+   function setMinimumBet(uint _newMinimumBet) public {
+       require(msg.sender == owner);
+       minimumBet = _newMinimumBet;
+   }
+
+   function setMaxAmountOfBets(uint _newMaxAmountOfBets) public {
+       require(msg.sender == owner);
+       require(_newMaxAmountOfBets > 0 && _newMaxAmountOfBets <= LIMIT_AMOUNT_BETS);
+       maxAmountOfBets = _newMaxAmountOfBets;
+   }
+
+   function kill() public {
+       require(msg.sender == owner);
+       selfdestruct(owner);
    }
 }
